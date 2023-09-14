@@ -27,23 +27,21 @@ func JsonResponse[T any](writer http.ResponseWriter, data Response[T]) {
 }
 
 type HttpServer struct {
-	port     string
-	endpoint string
-	router   *chi.Mux
+	port   string
+	router *chi.Mux
 }
 
-func New(port string, endpoint string) *HttpServer {
+func New(port string) *HttpServer {
 	router := chi.NewRouter()
 	router.Use(useCors().Handler)
 	return &HttpServer{
-		port:     port,
-		endpoint: endpoint,
-		router:   router,
+		port:   port,
+		router: router,
 	}
 }
 
-func (h *HttpServer) AddController(route func(r chi.Router)) {
-	h.router.Route(h.endpoint, route)
+func (h *HttpServer) AddController(path string, route func(r chi.Router)) {
+	h.router.Route(path, route)
 }
 
 func (h *HttpServer) Start() {
